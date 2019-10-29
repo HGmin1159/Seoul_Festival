@@ -8,6 +8,7 @@ let search = document.querySelector("input");
 
 let info = document.querySelector("#info");
 let back = document.querySelector("#revert");
+let name = document.querySelector("h1");
 let mapContainer = document.querySelector("#map"); // 지도를 표시할 div 
 
 let map;
@@ -21,7 +22,7 @@ var ps = new kakao.maps.services.Places();
 function searchHandler(e) {
     setTimeout(() => {
         let word = e.target.value;
-        console.log(div)
+        //console.log(div)
         // let filtered = festivals.filter(obj => obj["축제명"].indexOf(word) == -1);
         for (let i = 0; i < festivals.length; i++) {
             if (div.children[i].textContent.indexOf(word) == -1) {
@@ -82,6 +83,7 @@ function showAll(e) {
 
 function showInfo(e) {
     toggleUI();
+    name.textContent = e.target.textContent;
     showMap(e.target.textContent);
 }
 
@@ -109,6 +111,7 @@ function placesSearchCB(data, status, pagination) {
         map.setBounds(bounds);
         console.log(status, data);
     } else {
+        mapContainer.textContent = "아직..";
         console.log(status, data);
     }
 }
