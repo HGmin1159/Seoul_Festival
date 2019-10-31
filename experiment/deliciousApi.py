@@ -6,7 +6,7 @@ import requests
 conn = sqlite3.connect("experiment/2015_festival.db")
 c = conn.cursor()
 
-apikey = "<appkey here>"
+apikey = "<appkey>"
 url = "https://dapi.kakao.com/v2/local/search/category.json"
 
 pathfrom = "experiment/2015_축제_위경도 추가_수정.csv"
@@ -31,12 +31,10 @@ def db_session_add(doc, pk):
     for d in doc:
         t = []
         for k, v in d.items():
-            if k != "distance" and k != "id":
-                t.append(v)
-            else:
-                t.append(int(v))
-        t.append(pk)
-        c.execute('INSERT INTO restaurants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)', tuple(t))
+            t.append(v)
+            if k == "id":
+                c.execute('INSERT INTO festival_restaurants VALUES (?,?)', (pk, int(v)))
+        c.execute('INSERT OR IGNORE INTO restaurants VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', tuple(t))
 
 for i in df.index:
     if df.iloc[i, 3] > 0: # 좌표가 있으면
