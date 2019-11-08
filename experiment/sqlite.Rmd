@@ -1,0 +1,42 @@
+---
+title: "sqlite"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(DBI)
+con <- dbConnect(RSQLite::SQLite(), "2015_festival.db")
+dbListTables(con)
+```
+
+```{r}
+library(datamodelr)
+library(tidyverse)
+festival <- tbl(con, "festival") %>% collect()
+restaurants <- tbl(con, "restaurants") %>% collect()
+festival_restaurants <- tbl(con, "festival_restaurants") %>% collect()
+```
+
+```{r}
+model <- dm_from_data_frames(festival, restaurants, festival_restaurants)
+
+model <- dm_add_references(
+  model,
+  festival$id == festival_restaurants$festival_id,
+  restaurants$id == festival_restaurants$restaurants_id
+)
+
+graph <- dm_create_graph(model, col_attr=c("column", "type"))
+dm_render_graph(graph)
+```
+
+```{r}
+graph2 <- dm_create_graph(model, rankdir="LR", col_attr=c("column", "type"))
+dm_render_graph(graph2)
+dbDisconnect(con)
+```
+
