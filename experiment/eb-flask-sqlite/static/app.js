@@ -166,10 +166,6 @@ function showMenu(e) {
     mapContainer = document.createElement("div");
     mapContainer.id = "map";
     container.insertBefore(mapContainer, null);
-
-    while (mapContainer.firstChild) {
-        mapContainer.removeChild(mapContainer.firstChild);
-    }
     mapContainerOld.remove();
 
     for (let res of restaurants) {

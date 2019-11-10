@@ -3,16 +3,20 @@ import sqlite3
 
 application = Flask(__name__)
 
+KEYS = ('festival_id', 'restaurants_id', 'distance',
+        "id", "place_name", "category_name",
+        "category_group_code", "category_group_name",
+        "phone", "address_name",
+        "road_address_name",
+        "x", "y", "place_url"
+        )
+
 
 def fetch_fes():
     conn = sqlite3.connect("2015_festival.db")
     c = conn.cursor()
-
     c.execute("SELECT id, 축제명, x, y FROM festival;")
-    lst = []
-    for row in c:
-        lst.append(row)
-
+    lst = [row for row in c]
     conn.close()
     return lst
 
@@ -20,7 +24,6 @@ def fetch_fes():
 def fetch_res(fes_id):
     conn = sqlite3.connect("2015_festival.db")
     c = conn.cursor()
-
     c.execute("""
                 SELECT *
                 FROM (SELECT *
@@ -30,17 +33,7 @@ def fetch_res(fes_id):
                 ON fr.restaurants_id = r.id
                 ORDER BY distance;
                 """, (fes_id, ))
-    keys = ('festival_id', 'restaurants_id', 'distance',
-            "id", "place_name", "category_name",
-            "category_group_code", "category_group_name",
-            "phone", "address_name",
-            "road_address_name",
-            "x", "y", "place_url"
-            )
-    lst = []
-    for row in c:
-        lst.append(dict(zip(keys, row)))
-
+    lst = [dict(zip(KEYS, row)) for row in c]
     conn.close()
     return lst
 
