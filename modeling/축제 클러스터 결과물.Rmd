@@ -1,0 +1,94 @@
+---
+title: "클러스터 분석 시각화"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+ 파이썬에서 작업한 유동인구 분석자료를 가져옴
+```{r}
+fes_ratio = read.csv("fes_raio.csv")
+fes_ratio
+
+```
+
+ 자료를 토대로 축제별로 나이와 성별의 분포를 예측하려 하지만 설명변수가 키워드로 이루어진 이항변수만 있기 때문에 정확성에 있어서는 타협하면서도 나이 분포에 대한 더 좋은 정보를 제공하기 위해 클러스터링을 해준뒤 그 라벨을 맞추는 모델링을 짜주려고 한다. 
+ 
+ 
+ 아래는 kmeans 클러스터 분석의 최적 모수를 찾기 위해 설명력을 비교해본 결과물이다.
+```{r}
+library("tidyverse")
+library("ggplot2")
+library("shiny")
+
+fes_ratio_age = fes_ratio[,2:7]+fes_ratio[,8:13]
+
+colnames(fes_ratio_age) = c("Age_10","Age_20","Age_30","Age_40","Age_50","Age_60")
+
+for (i in 1:8){
+clt = kmeans(fes_ratio_age,i)
+print(paste(i,"개 클러스터의 설명력 :",trunc(clt$betweenss/clt$totss*100),"%"))
+
+nclt = as.tibble(clt$cluster) %>%
+  group_by(value) %>%
+  summarise(n())
+print(paste("클러스터 할당 수 : ",nclt["n()"]))
+print("")
+}
+```
+
+클러스터의 할당 형태를 보니 4번째 클러스터 부터 바로 최소할당이 1이 생겼는데 5번째 6번째는 또 자연스럽게 분할이 되고 있다. 따라서 4번째에 1개로 할당된 클러스터는 아웃라이어로 보인다. 
+아웃라이어는 분석결과 축제 코드 32번이었다. 10대의 비율이 40퍼센트로 다른 축제와는 양상이 달랐다. 이는 정보를 많이 담고 있는 아웃라이어라고 볼 수 있다.
+```{r}
+clt = kmeans(fes_ratio_age,4)
+out = cbind(fes_ratio_age,fes_ratio["X"])
+out[clt$cluster == 1,]
+```
+
+ 6개의 클러스터가 적절해 보인다. 각각의 클러스터에 대해 분포를 시각화 하면 다음과 같다.  
+```{r}
+library(gridExtra)
+
+clt = kmeans(fes_ratio_age,6)
+
+vis = cbind(fes_ratio_age,clt$cluster)
+vis
+vis_stat <- vis %>%
+  group_by(clt$cluster) %>%
+  summarise(Age_10=mean(Age_10),Age_20=mean(Age_20),Age_30=mean(Age_30),Age_40=mean(Age_40),Age_50=mean(Age_50),Age_60=mean(Age_60))
+
+vis_gg = cbind(ind= c(1:6),data.frame(t(vis_stat))[2:7,])
+
+
+p1 <- vis_gg %>%
+  ggplot(aes(x=ind,y=X1))+
+  geom_bar(stat="identity")
+p2 <- vis_gg %>%
+  ggplot(aes(x=ind,y=X2))+
+  geom_bar(stat="identity")
+p3 <- vis_gg %>%
+  ggplot(aes(x=ind,y=X3))+
+  geom_bar(stat="identity")
+p4 <- vis_gg %>%
+  ggplot(aes(x=ind,y=X4))+
+  geom_bar(stat="identity")
+p5 <- vis_gg %>%
+  ggplot(aes(x=ind,y=X5))+
+  geom_bar(stat="identity")
+p6 <- vis_gg %>%
+  ggplot(aes(x=ind,y=X6))+
+  geom_bar(stat="identity")
+grid.arrange(p1,p2,p3,p4,p5,p6)
+```
+ 
+ 시각화 결과 가장 많은 비중을 차지하는 연령이 바뀌며 잘 분류가 된것을 확인 할 수 있다. 이제 이 분류를 기준으로 분류를 맞추는 모델을 짜려고 한다.
+ 
+```{r}
+result = cbind(fes_ratio["X"],vis)
+write.csv(result,"result.csv")
+```
+ 
+ 
