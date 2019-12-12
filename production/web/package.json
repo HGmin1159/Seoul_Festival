@@ -1,0 +1,31 @@
+{
+  "name": "seoul-festival",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "export": "next export",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@material-ui/core": "^4.7.0",
+    "@material-ui/icons": "^4.5.1",
+    "chart.js": "^2.9.3",
+    "isomorphic-unfetch": "^3.0.0",
+    "leaflet": "^1.6.0",
+    "next": "^9.1.3",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-swipeable-views": "^0.13.3"
+  },
+  "devDependencies": {
+    "cross-env": "^6.0.3",
+    "eslint-plugin-react-hooks": "^2.3.0"
+  }
+}
