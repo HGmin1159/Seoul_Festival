@@ -3,8 +3,9 @@ import Head from 'next/head';
 import fes from '../../2019.json';
 import FullWidthTabs from '../../components/FullWidthTabs';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import queryString from 'query-string';
 // import https from "https";
-
+// const querystring = require('querystring');
 // const agent = new https.Agent({
 //   rejectUnauthorized: false
 // });
@@ -43,9 +44,15 @@ const Info = ({ fe, res }) => {
 }
 
 Info.getInitialProps = async function (context) {
-  const fe = JSON.parse(decodeURI(context.query.id));
-  fe.exp = fe.exp.replace(/escapeSlash/g, "/");
-  const res = await fetch(`https://a.seoulfestival.shop/restaurants?id=${fe.id}`);
+  const fe = queryString.parse(context.query.id);
+  // console.log(fe)
+  // fe.exp = fe.exp.replace(/escapeSlash/g, "/");
+  // fe.region = fe.region.replace(/escapeSlash/g, "/");
+  // fe.place = fe.place.replace(/escapeSlash/g, "/");
+  let res = await fetch(`https://a.seoulfestival.shop/restaurants?id=${fe.id}`);
+  if (res.status != 200) {
+    res = await fetch(`https://dollhy.pythonanywhere.com/restaurants/${fe.id}`);
+  }
   const dataRes = await res.json();
 
   return {

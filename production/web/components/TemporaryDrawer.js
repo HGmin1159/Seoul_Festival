@@ -9,7 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Form from './Form';
 import Link from 'next/link';
 import MenuIcon from '@material-ui/icons/Menu';
-
+import queryString from 'query-string';
 
 const useStyles = makeStyles({
     list: {
@@ -36,6 +36,7 @@ export default function TemporaryDrawer({ fes, isWide }) {
     const [state, setState] = React.useState({
         left: false
     });
+    const [word, setWord] = React.useState('');
 
     const toggleDrawer = (side, open) => event => {
         if (event.type === 'keydown' && event.key !== 'Escape') {
@@ -50,25 +51,26 @@ export default function TemporaryDrawer({ fes, isWide }) {
             className={classes.list}
             onKeyDown={toggleDrawer(side, false)}
         >
-            <Form></Form>
+            <Form searchHandler={setWord}></Form>
             <Divider />
             <p>찾는 축제 목록</p>
             <List>
                 {fes.map((fes) => (
-
+                    (fes.name.indexOf(word) != -1)
+                    &&
                     <ListItem button key={fes.id}>
-                        <Link href="/p/[id]" as={`/p/${encodeURI(
-                            JSON.stringify({
+                        <Link href="/p/[id]" as={`/p/${
+                            queryString.stringify({
                                 id: fes.id,
                                 name: fes.name,
                                 x: fes.x,
                                 y: fes.y,
                                 cluster: fes.cluster,
                                 man: fes.man,
-                                exp: fes.explanation.replace(/(\\(n|t))/g, '').replace(/\/{1}/g, 'escapeSlash'),
-                                region: fes.개최지역,
-                                place: fes.축제장소
-                        }))}`}>
+                                exp: fes.explanation.replace(/(\\(n|t))/g, ''),
+                                region: fes.region.replace(/(\\(n|t))/g, ''),
+                                place: fes.place.replace(/(\\(n|t))/g, '')
+                        })}`}>
                             <a>
                                 <ListItemIcon>
                                     <img src={`/img/${fes.id}.jpg`}></img>

@@ -1,4 +1,4 @@
-const Form = () => {
+const Form = ({searchHandler}) => {
 
   Date.prototype.toDateInputValue = (function () {
     let local = new Date(this);
@@ -9,8 +9,11 @@ const Form = () => {
   return (
     <>
       <div className="dropdown">
-        <span>축제검색</span>
-        <div className="dropdown-content">
+        <span>축제검색: </span>
+        <input type="text" onInput={e=>{
+          searchHandler(e.target.value);
+        }}></input>
+        {/* <div className="dropdown-content">
           <label htmlFor="male">
             <input type="radio" name="gender" value="male" id="male"></input>
             남자
@@ -27,7 +30,7 @@ const Form = () => {
       <input type="date" defaultValue={new Date().toDateInputValue()} id="date"></input><br></br>
 
           <button>축제 검색</button>
-        </div>
+        </div> */}
         <style jsx>{`
           .dropdown {
             padding: 4%;

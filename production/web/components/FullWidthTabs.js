@@ -21,6 +21,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Form from './Form';
 import Link from 'next/link';
 
+import queryString from 'query-string';
+// const querystring = require('querystring');
+
 const LeafMap = dynamic(
     () => import('./LeafMap'),
     {
@@ -82,6 +85,7 @@ export default function FullWidthTabs({ fe, res, fes }) {
     const [orientation, setOrientation] = useState(1);
     const [disabled, setDisabled] = useState(false);
     const [isWide, setIsWide] = useState(false);
+    const [word, setWord] = React.useState('');
 
     const resizeHandler = () => {
         setOrientation(window.innerWidth < window.innerHeight || window.innerHeight > 500);
@@ -123,25 +127,26 @@ export default function FullWidthTabs({ fe, res, fes }) {
             </AppBar>
             <div className="view-container">
                 <div className="fest-list">
-                    <Form></Form>
+                    <Form searchHandler={setWord}></Form>
                     <Divider />
                     <p className="fest-list-p">찾는 축제 목록</p>
                     <List>
                         {fes.map((fes) => (
-
+                            (fes.name.indexOf(word) != -1)
+                            &&
                             <ListItem button key={fes.id}>
-                                <Link href="/p/[id]" as={`/p/${encodeURI(
-                                    JSON.stringify({
+                                <Link href="/p/[id]" as={`/p/${
+                                    queryString.stringify({
                                         id: fes.id,
                                         name: fes.name,
                                         x: fes.x,
                                         y: fes.y,
                                         cluster: fes.cluster,
                                         man: fes.man,
-                                        exp: fes.explanation.replace(/(\\(n|t))/g, '').replace(/\/{1}/g, 'escapeSlash'),
-                                        region: fes.개최지역,
-                                        place: fes.축제장소
-                                }))}`}>
+                                        exp: fes.explanation.replace(/(\\(n|t))/g, ''),
+                                        region: fes.region.replace(/(\\(n|t))/g, ''),
+                                        place: fes.place.replace(/(\\(n|t))/g, '')
+                                })}`}>
                                     <a className="fest-list-a">
                                         <ListItemIcon>
                                             <img src={`/img/${fes.id}.jpg`} className="fest-list-img"></img>
