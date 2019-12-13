@@ -32,7 +32,7 @@
 
 1) 연령별 이용자 비율 제공
 
-![](./2.JPG){#id .class width="50%"}
+![](https://github.com/HGmin1159/Seoul_Festival/2.JPG){#id .class width="50%"}
 
 2) 성별 이용자 비율 제공
 
