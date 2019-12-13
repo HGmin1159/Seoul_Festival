@@ -32,15 +32,15 @@
 
 1) 연령별 이용자 비율 제공
 
-![](https://github.com/HGmin1159/Seoul_Festival/2.JPG){#id .class width="50%"}
+![](https://github.com/HGmin1159/Seoul_Festival/2.JPG)
 
 2) 성별 이용자 비율 제공
 
-![](./3.JPG){#id .class width="40%"}
+![](./3.JPG)
 
 3) 주변 지역 정보 제공
 
-![](./4.JPG){#id .class width="40%"}
+![](./4.JPG)
 
 # 2. 데이터 분석
 
