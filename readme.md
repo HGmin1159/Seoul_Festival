@@ -98,7 +98,7 @@ DB 구조는 다음과 같다.
 [ 데이터 베이스 구축 파일 ]
 
 - [DB 파일](cron/SEOUL_FESTIVAL.db)
-- [DB 및 table 생성](data/database/DB 만들기 SEOUL_FESTIVAL.ipynb)
+- [DB 및 table 생성](data/database/)
 - [DB 스키마](data/database/db_schema_res.Rmd)
 
 ## 2-3. 뉴스크롤링
