@@ -1,19 +1,4 @@
----
-title: "데이터 공학 최종 보고서"
-output: rmdformats::readthedown
----
 
-```{r, include=FALSE}
-devtools::install_github("bergant/datamodelr")
-knitr::opts_chunk$set(echo = TRUE)
-
-library("rmdformats")
-library(reticulate)
-use_python("C:/Users/User/AppData/Local/Continuum/anaconda3/python")
-library("wordcloud")
-library("RColorBrewer")
-library("KoNLP")
-```
 
 # [서울시 축제 대백과](https://seoul-festival-git-dev.abcdefg.now.sh/)
 
