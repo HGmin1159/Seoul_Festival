@@ -55,7 +55,7 @@
 
 [ 관련 파일 및 데이터 경로 ]
 
-- (크롤링 및 전처리 파일) data/preprocess/crawling/crawling_final.ipynb
+- [크롤링 및 전처리 파일](data/preprocess/crawling/crawling_final.ipynb)
 - (2015/2016년 축제 정보) data/preprocess/crawling/api_crawling.xlsx
 - (2019년 축제 정보) data/preprocess/crawling/festival_crawling_2019.xlsx
 
