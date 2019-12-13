@@ -53,11 +53,10 @@
 - 문화체육관광부 제공 및 카카오 API 사용
 - 축제명, 축제기간, 축제장소, 축제설명 등의 정보
 
-[ 관련 파일 및 데이터 경로 ]
-
+[ 관련 파일 ]
 - [크롤링 및 전처리 파일](data/preprocess/crawling/crawling_final.ipynb)
-- (2015/2016년 축제 정보) data/preprocess/crawling/api_crawling.xlsx
-- (2019년 축제 정보) data/preprocess/crawling/festival_crawling_2019.xlsx
+- [2015/2016년 축제 정보](data/preprocess/crawling/api_crawling.xlsx)
+- [2019년 축제 정보](data/preprocess/crawling/festival_crawling_2019.xlsx)
 
 ### 2. 유동인구(일별 유동인구, 거주지)
 
@@ -65,11 +64,10 @@
 - skt에서 수집한 2015년 8월 ~ 2016년 7월의 일단위 성별/연령별 유동인구 데이터
 - EPSG:5179 좌표계 사용
 
-[ 관련 파일 및 데이터 경로 ]
-
-- (축제 장소 좌표계 수정) data/preprocess/float_pop/transform_coordinate.ipynb
-- (서울시 빅데이터 캠퍼스 데이터 추출 쿼리) data/preprocess/float_pop/분석일자 추가 및 유동인구 데이터 추출 쿼리.ipynb, query_the_day.txt
-- (유동인구 데이터) data/preprocess/float_pop/float_pop.xlsx
+[ 관련 파일 ]
+- [축제 장소 좌표계 수정](data/preprocess/float_pop/transform_coordinate.ipynb)
+- [서울시 빅데이터 캠퍼스 데이터 추출 쿼리](data/preprocess/float_pop/분석일자 추가 및 유동인구 데이터 추출 쿼리.ipynb, query_the_day.txt)
+- [유동인구 데이터](data/preprocess/float_pop/float_pop.xlsx)
 
 ### 3. 키워드
 
@@ -97,9 +95,9 @@ DB 구조는 다음과 같다.
 
 [ 데이터 베이스 구축 파일 ]
 
-- (DB 파일) cron/SEOUL_FESTIVAL.db
-- (DB 및 table 생성) data/database/DB 만들기 SEOUL_FESTIVAL.ipynb
-- (DB 스키마) data/database/db_schema_res.Rmd
+- [DB 파일](cron/SEOUL_FESTIVAL.db)
+- [DB 및 table 생성](data/database/DB 만들기 SEOUL_FESTIVAL.ipynb)
+- [DB 스키마](data/database/db_schema_res.Rmd)
 
 ## 2-3. 뉴스크롤링
 
@@ -118,7 +116,7 @@ DB 구조는 다음과 같다.
  기사의 전문을 보려면 크롤링을 할 때 각 기사를 제공한 언론사의 사이트로 들어갔어야 했는데 이 때 언론사 마다 접근 헤더가 다르게 설정해주는 것이 기술적으로 어렵기 때문에 미리보기로 대체 해주었다. 또한 언론사마다 미리보기에 들어가는 내용들도 선별을 하므로 미리보기만으로 기사의 주요내용을 뽑아낼 수 있을거라 사료된다.  
  
  이 내용들은 문장들로 이루어져 있으므로 차후에 자연어 처리를 해주었다. 
-(github.com/HGmin1159/Seoul_Festival/keyword/untitled.ipynb 참고)  
+[자연어 처리 참고](github.com/HGmin1159/Seoul_Festival/keyword/untitled.ipynb)  
 
 
 ## 2-4. 키워드
@@ -127,7 +125,7 @@ DB 구조는 다음과 같다.
  위에서 얻은 축제 기사들에 대한 정보를 정리하고 문체부에서 얻은 축제설명을 정량적 데이터로 변경시켜주기 위해 자연어 처리를 해주었다. 이렇게 뽑아낸 핵심 명사들은 축제별 키워드로서 축제들을 구분짓는 정보로서 사용해줄 것이다.  
  
  축제별 키워드는 차후 유동인구 데이터가 있는 축제들을 분석하여 축제 이용자의 연령/성별 비율을 예측할 때 사용해 줄 것이다.  
-(github.com/HGmin1159/Seoul_Festival/keyword/untitled.ipynb 참고)
+[참고](github.com/HGmin1159/Seoul_Festival/keyword/untitled.ipynb)
  
 ### 방법
  사용한 패키지는 python의 KONLPY이다. KONLP를 통해 수집한 문장들을 명사별로 끊어서 분석을 했다. 그런 다음 전체 축제에서 어떤 키워드가 주로 등장하는지 통계를 내어보았다. 그 결과는 다음과 같다.  
@@ -243,7 +241,7 @@ grid.arrange(p1,p2,p3,p4,p5,p6)
  
  4번 클러스터의 경우 다른 데이터에 비해 괴리가 큰 데 이 클러스터에 전술한 아웃라이어가 속해있다. 
  클러스터의 결과물이 비교적 양호하였기에 클러스터 라벨을 짜주는 모델을 짜서 연령비를 예측하고자 한다. 
- (github.com/HGmin1159/Seoul_Festival/modeling/축제 클러스터 결과물.rmd 참고)
+ [참고 - 축제 클러스터 결과물](github.com/HGmin1159/Seoul_Festival/modeling/축제 클러스터 결과물.rmd)
 
 ### 모델링
  모델링은 python의 sklearn 패키지를 사용해주었다. 모델링을 할 때 기반 모델들은 로지스틱 회귀분석, 랜덤포레스트, Ada Boost를 사용하였고, 멀티클래스 분류기인 만큼 One versus One과 One versus Rest 기법으로 모델을 합쳐주었다.
@@ -272,10 +270,9 @@ grid.arrange(p1,p2,p3,p4,p5,p6)
 rmse가 0.02내외로 실제 비율과 예측 비율의 평균적인 차이는 2%에 불과하여 유의미한 정보를 제공할 수 있다고 판단하여
 이러한 분석 정보를 사용자에게 전달하고자 하였다.
 
-[남성 이용자 비율 예측 파일]
-
-- modeling/Man proportion prediction/데이터 전처리.jpynb
-- modeling/Man proportion prediction/남성비율예측+변수중요도.html
+[ 남성 이용자 비율 예측 파일 ]
+- [전처리](modeling/Man proportion prediction/데이터 전처리.jpynb)
+- [모델링](modeling/Man proportion prediction/남성비율예측+변수중요도.html)
 
 # 3. 시스템 구조
 
@@ -322,9 +319,9 @@ SQLite를 EC2에 올려서 사용하였다. 새로운 서버를 연결할 필요
 - window의 경우 `nncron`을 설치한 후 cron.tab 파일에 cron 문법을 사용하여 실행할 파일 정보를 입력해놓는다. 
 
 [ 자동화 관련 파일 ]
-- cron/cron.tab
-- (크롤링 및 DB 업데이트 코드) cron/final_auto_crawling_db_update.py
-- (사용한 패키지들의 버전정보) cron/python_package_version.txt
+- [cron](cron/cron.tab)
+- [크롤링 및 DB 업데이트 코드](cron/final_auto_crawling_db_update.py)
+- [사용한 패키지들의 버전정보](cron/python_package_version.txt)
 
 ## 4-2. 아쉬운 점 및 향후 발전 방안
 
