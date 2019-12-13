@@ -32,15 +32,15 @@
 
 1) 연령별 이용자 비율 제공
 
-![](https://github.com/HGmin1159/Seoul_Festival/2.JPG)
+![](./c.jpg){#id .class width="50%"}
 
 2) 성별 이용자 비율 제공
 
-![](./3.JPG)
+![](./d.jpg){#id .class width="50%"}
 
 3) 주변 지역 정보 제공
 
-![](./4.JPG)
+![](./e.jpg){#id .class width="50%"}
 
 # 2. 데이터 분석
 
@@ -54,9 +54,9 @@
 - 축제명, 축제기간, 축제장소, 축제설명 등의 정보
 
 [ 관련 파일 및 데이터 경로 ]
-[크롤링 및 전처리 파일](https://github.com/HGmin1159/Seoul_Festival/data/preprocess/crawling/crawling_final.ipynb)
-[2015/2016년 축제 정보](data/preprocess/crawling/api_crawling.xlsx)
 
+- (크롤링 및 전처리 파일) data/preprocess/crawling/crawling_final.ipynb
+- (2015/2016년 축제 정보) data/preprocess/crawling/api_crawling.xlsx
 - (2019년 축제 정보) data/preprocess/crawling/festival_crawling_2019.xlsx
 
 ### 2. 유동인구(일별 유동인구, 거주지)
@@ -93,7 +93,7 @@ SQLite를 사용하여 데이터베이스를 구축하였다. 위에서 얻은 r
 
 DB 구조는 다음과 같다.
 
-![db_schema](./data/database/db_schema_res.PNG){#id .class width="50%"}
+![db_schema](./data/database/db_schema_res.png){#id .class width="50%"}
 
 [ 데이터 베이스 구축 파일 ]
 
