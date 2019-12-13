@@ -68,7 +68,7 @@
 [ 관련 파일 및 데이터 경로 ]
 
 - [축제 장소 좌표계 수정](data/preprocess/float_pop/transform_coordinate.ipynb)
-- [서울시 빅데이터 캠퍼스 데이터 추출 쿼리](data/preprocess/float_pop/분석일자 추가 및 유동인구 데이터 추출 쿼리.ipynb, query_the_day.txt)
+- [서울시 빅데이터 캠퍼스 데이터 추출 쿼리](data/preprocess/float_pop/)
 - [유동인구 데이터](data/preprocess/float_pop/float_pop.xlsx)
 
 ### 3. 키워드
@@ -118,6 +118,7 @@ DB 구조는 다음과 같다.
  기사의 전문을 보려면 크롤링을 할 때 각 기사를 제공한 언론사의 사이트로 들어갔어야 했는데 이 때 언론사 마다 접근 헤더가 다르게 설정해주는 것이 기술적으로 어렵기 때문에 미리보기로 대체 해주었다. 또한 언론사마다 미리보기에 들어가는 내용들도 선별을 하므로 미리보기만으로 기사의 주요내용을 뽑아낼 수 있을거라 사료된다.  
  
  이 내용들은 문장들로 이루어져 있으므로 차후에 자연어 처리를 해주었다. 
+ 
 [자연어처리](github.com/HGmin1159/Seoul_Festival/keyword/untitled.ipynb)  
 
 
@@ -127,6 +128,7 @@ DB 구조는 다음과 같다.
  위에서 얻은 축제 기사들에 대한 정보를 정리하고 문체부에서 얻은 축제설명을 정량적 데이터로 변경시켜주기 위해 자연어 처리를 해주었다. 이렇게 뽑아낸 핵심 명사들은 축제별 키워드로서 축제들을 구분짓는 정보로서 사용해줄 것이다.  
  
  축제별 키워드는 차후 유동인구 데이터가 있는 축제들을 분석하여 축제 이용자의 연령/성별 비율을 예측할 때 사용해 줄 것이다.  
+ 
 [키워드](github.com/HGmin1159/Seoul_Festival/keyword/untitled.ipynb)
  
 ### 방법
@@ -243,7 +245,8 @@ grid.arrange(p1,p2,p3,p4,p5,p6)
  
  4번 클러스터의 경우 다른 데이터에 비해 괴리가 큰 데 이 클러스터에 전술한 아웃라이어가 속해있다. 
  클러스터의 결과물이 비교적 양호하였기에 클러스터 라벨을 짜주는 모델을 짜서 연령비를 예측하고자 한다. 
- [클러스터결과물](github.com/HGmin1159/Seoul_Festival/modeling/축제 클러스터 결과물.rmd)
+ 
+ [클러스터결과물](github.com/HGmin1159/Seoul_Festival/modeling/)
 
 ### 모델링
  모델링은 python의 sklearn 패키지를 사용해주었다. 모델링을 할 때 기반 모델들은 로지스틱 회귀분석, 랜덤포레스트, Ada Boost를 사용하였고, 멀티클래스 분류기인 만큼 One versus One과 One versus Rest 기법으로 모델을 합쳐주었다.
@@ -274,8 +277,8 @@ rmse가 0.02내외로 실제 비율과 예측 비율의 평균적인 차이는 2
 
 [남성 이용자 비율 예측 파일]
 
-- [데이터전처리](modeling/Man proportion prediction/데이터 전처리.jpynb)
-- [예측결과+변수중요도](modeling/Man proportion prediction/남성비율예측+변수중요도.html)
+- [데이터전처리](modeling/Man proportion prediction/)
+- [예측결과+변수중요도](modeling/Man proportion prediction/)
 
 # 3. 시스템 구조
 
