@@ -277,8 +277,7 @@ rmse가 0.02내외로 실제 비율과 예측 비율의 평균적인 차이는 2
 
 [남성 이용자 비율 예측 파일]
 
-- [데이터전처리](https://github.com/HGmin1159/Seoul_Festival/tree/master/modeling/Man%20proportion%20predictiion)
-- [예측결과+변수중요도](https://github.com/HGmin1159/Seoul_Festival/tree/master/modeling/Man%20proportion%20predictiion)
+- [남성 비율 ](https://github.com/HGmin1159/Seoul_Festival/tree/master/modeling/Man%20proportion%20predictiion)
 
 # 3. 시스템 구조
 
