@@ -1,4 +1,5 @@
 
+시스템구조 그림: https://hokyeongchoi.github.io/
 ## 서울시 축제 대백과
 
 ### 프로젝트 개요
