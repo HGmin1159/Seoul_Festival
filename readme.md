@@ -93,7 +93,7 @@ SQLite를 사용하여 데이터베이스를 구축하였다. 위에서 얻은 r
 
 DB 구조는 다음과 같다.
 
-![db_schema](./data/database/db_schema_res.png){#id .class width="50%"}
+![db_schema](./data/database/db_schema_res.png)
 
 [ 데이터 베이스 구축 파일 ]
 
