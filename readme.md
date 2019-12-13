@@ -119,7 +119,7 @@ DB 구조는 다음과 같다.
  
  이 내용들은 문장들로 이루어져 있으므로 차후에 자연어 처리를 해주었다. 
  
-[자연어처리](github.com/HGmin1159/Seoul_Festival/keyword/untitled.ipynb)  
+[자연어처리 파일](github.com/HGmin1159/Seoul_Festival/keyword/untitled.ipynb)  
 
 
 ## 2-4. 키워드
@@ -129,7 +129,7 @@ DB 구조는 다음과 같다.
  
  축제별 키워드는 차후 유동인구 데이터가 있는 축제들을 분석하여 축제 이용자의 연령/성별 비율을 예측할 때 사용해 줄 것이다.  
  
-[키워드](github.com/HGmin1159/Seoul_Festival/keyword/untitled.ipynb)
+[키워드 처리 파일](github.com/HGmin1159/Seoul_Festival/keyword/untitled.ipynb)
  
 ### 방법
  사용한 패키지는 python의 KONLPY이다. KONLP를 통해 수집한 문장들을 명사별로 끊어서 분석을 했다. 그런 다음 전체 축제에서 어떤 키워드가 주로 등장하는지 통계를 내어보았다. 그 결과는 다음과 같다.  
@@ -277,8 +277,8 @@ rmse가 0.02내외로 실제 비율과 예측 비율의 평균적인 차이는 2
 
 [남성 이용자 비율 예측 파일]
 
-- [데이터전처리](modeling/Man proportion prediction/)
-- [예측결과+변수중요도](modeling/Man proportion prediction/)
+- [데이터전처리](modeling/Man proportion predictiion/)
+- [예측결과+변수중요도](modeling/Man proportion predictiion/)
 
 # 3. 시스템 구조
 
@@ -325,9 +325,9 @@ SQLite를 EC2에 올려서 사용하였다. 새로운 서버를 연결할 필요
 - window의 경우 `nncron`을 설치한 후 cron.tab 파일에 cron 문법을 사용하여 실행할 파일 정보를 입력해놓는다. 
 
 [ 자동화 관련 파일 ]
-- cron/cron.tab
-- (크롤링 및 DB 업데이트 코드) cron/final_auto_crawling_db_update.py
-- (사용한 패키지들의 버전정보) cron/python_package_version.txt
+- [cron](cron/cron.tab)
+- [크롤링 및 DB 업데이트 코드](cron/final_auto_crawling_db_update.py)
+- [사용한 패키지들의 버전정보](cron/python_package_version.txt)
 
 ## 4-2. 아쉬운 점 및 향후 발전 방안
 
