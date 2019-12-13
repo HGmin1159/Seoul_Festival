@@ -32,15 +32,15 @@
 
 1) 연령별 이용자 비율 제공
 
-![](./c.jpg)
+![](https://github.com/HGmin1159/Seoul_Festival/2.JPG)
 
 2) 성별 이용자 비율 제공
 
-![](./d.jpg)
+![](./3.JPG)
 
 3) 주변 지역 정보 제공
 
-![](./e.jpg)
+![](./4.JPG)
 
 # 2. 데이터 분석
 
@@ -54,9 +54,9 @@
 - 축제명, 축제기간, 축제장소, 축제설명 등의 정보
 
 [ 관련 파일 및 데이터 경로 ]
+[크롤링 및 전처리 파일](https://github.com/HGmin1159/Seoul_Festival/data/preprocess/crawling/crawling_final.ipynb)
+[2015/2016년 축제 정보](data/preprocess/crawling/api_crawling.xlsx)
 
-- (크롤링 및 전처리 파일) data/preprocess/crawling/crawling_final.ipynb
-- (2015/2016년 축제 정보) data/preprocess/crawling/api_crawling.xlsx
 - (2019년 축제 정보) data/preprocess/crawling/festival_crawling_2019.xlsx
 
 ### 2. 유동인구(일별 유동인구, 거주지)
