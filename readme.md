@@ -1,6 +1,6 @@
 
 
-# [서울시 축제 대백과](https://seoul-festival-git-dev.abcdefg.now.sh/)
+# [서울시 축제 대백과](https://seoul-festival.now.sh/)
 
 # 1. 프로젝트 개요
 
