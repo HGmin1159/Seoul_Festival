@@ -6,4 +6,6 @@
 
 # reference : http://hleecaster.com/task-scheduling-in-windows-using-cron/
 
-00 12 1 * * /usr/bin/python3 /home/cron/final_auto_crawling_db_update.py && /usr/bin/Rscript /home/cron/man_proportion_prediction.R && /usr/bin/python3 /home/cron/image_retriever.py && /usr/bin/python3 /home/cron/sqltojson.py && /home/cron/git-update.sh
+00 12 1 * * /usr/bin/python3 ~/cron/final_auto_crawling_db_update.py && /usr/bin/Rscript ~/cron/man_proportion_prediction.R && /usr/bin/python3 ~/cron/image_retriever.py && /usr/bin/python3 ~/cron/sqltojson.py
+00 12 2 * * scp -i ~/.ssh/sfshiny.pem ~/cron/SEOUL_FESTIVAL.db ubuntu@ec2-35-170-234-69.compute-1.amazonaws.com:/home/ubuntu/sfplumber
+00 12 4 * * /home/cron/git-update.sh

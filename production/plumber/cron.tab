@@ -1,0 +1,5 @@
+#CRONTAB FILE 
+# Classic crontab format:
+# Minutes Hours Days Months WeekDays Command
+
+00 12 3 * * sudo cp --backup /home/ubuntu/sfplumber/SEOUL_FESTIVAL.db /sfplumber/SEOUL_FESTIVAL.db && sudo systemctl restart plumber-api
