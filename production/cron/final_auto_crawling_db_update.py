@@ -378,8 +378,13 @@ con.close()
 # # 연령 클러스터 예측
 
 # %%
+db_path = "SEOUL_FESTIVAL.db"
+table_nm = "FESTIVAL_INFO"
 con = sqlite3.connect(db_path)
 cur = con.cursor()
+cur.execute('PRAGMA table_info({})'.format(table_nm))
+table_columns = [i[1] for i in cur]
+
 cur.execute('SELECT * FROM FESTIVAL_CLUSTER')
 cluster_before = pd.DataFrame(cur.fetchall(), columns=['festival_id', '축제명', '클러스터'])
 cur.close()
@@ -397,10 +402,6 @@ con.close()
 # DB에서 가져오기
 target_festival = festival_updated.loc[festival_updated['festival_id'].isin(set(festival_updated['festival_id']) - set(cluster_before['festival_id']))][["festival_id","축제명","축제설명"]]
 
-
-# %%
-target_festival2 = festival_updated[["festival_id","축제명","축제설명"]]
-
 # %% [markdown]
 # #### 크롤링 과정
 # - 축제명을 네이버 뉴스에 검색
@@ -411,10 +412,6 @@ target_festival2 = festival_updated[["festival_id","축제명","축제설명"]]
 
 # %%
 target_festival["축제명_수정"]=target_festival["축제명"].map(lambda x : x[:-4])
-
-
-# %%
-target_festival2["축제명_수정"]=target_festival["축제명"].map(lambda x : x[:-4])
 
 # %% [markdown]
 # ### B.축제 키워드 크롤링 - 불러오기
@@ -438,24 +435,6 @@ for j in range(len(target_festival["축제명_수정"])) :
     target_festag = target_festag.append(pd.DataFrame(np.array([target_festival["축제명_수정"].iloc[j],test]).reshape(1,-1)))
     time.sleep(1)
 
-
-# %%
-target_festag2 = pd.DataFrame()
-for j in range(len(target_festival2["축제명_수정"])) :
-    url = "https://search.naver.com/search.naver?where=news&sm=tab_jum&query=" + str(target_festival2["축제명_수정"].iloc[j])
-    res = requests.get(url=url)
-
-    soup = BeautifulSoup(res.text,"html.parser")
-    test = []
-    
-    for i in range(10) :
-        temp = soup.select("#sp_nws"+str(i)+" > dl > dd:nth-of-type(2)")
-        
-        #temp = soup.select("a._sp_each_url")
-        test.append(str(temp))
-    target_festag2 = target_festag2.append(pd.DataFrame(np.array([target_festival2["축제명_수정"].iloc[j],test]).reshape(1,-1)))
-    time.sleep(1)
-
 # %% [markdown]
 # ## 2.자연어 처리
 # %% [markdown]
@@ -470,15 +449,7 @@ target_festag.columns = ["축제명_수정","축제주요내용"]
 
 
 # %%
-target_festag2.columns = ["축제명_수정","축제주요내용"]
-
-
-# %%
 target_festag.index= range(len(target_festag))
-
-
-# %%
-target_festag2.index= range(len(target_festag2))
 
 
 # %%
@@ -486,19 +457,9 @@ target_festag_nouns = target_festag
 
 
 # %%
-target_festag_nouns2 = target_festag2
-
-
-# %%
 for i in range(len( target_festag)) :
     container =  target_festag["축제주요내용"][i]
     target_festag_nouns["축제주요내용"][i] = kkma.nouns(''.join(container))
-
-
-# %%
-for i in range(len( target_festag2)) :
-    container =  target_festag2["축제주요내용"][i]
-    target_festag_nouns2["축제주요내용"][i] = kkma.nouns(''.join(container))
 
 
 # %%
@@ -517,25 +478,20 @@ for i in keyword['keyword'] :
 
 
 # %%
-target_tag2 = dict()
-for i in keyword['keyword'] :
-    #print(i)
-    tmp_tag_list = []
-    for j in target_festag_nouns2["축제주요내용"]:
-        tmp_tag_list.append(i in j)
-    target_tag2[i] = tmp_tag_list
-
-
-# %%
 target_tag = pd.DataFrame(target_tag).applymap(int)
 
 
 # %%
-target_tag2 = pd.DataFrame(target_tag2).applymap(int)
+target_tag_old = pd.read_csv("target_tag.csv", index_col=0)
+target_tag_old.to_csv("target_tag_old.csv")
 
 
 # %%
-target_tag2.to_csv("target_tag.csv")
+target_tag_new = target_tag_old.append(target_tag, ignore_index=True)
+
+
+# %%
+target_tag_new.to_csv("target_tag.csv")
 
 # %% [markdown]
 # ## 클러스터 예측
