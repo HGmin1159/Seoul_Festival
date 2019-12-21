@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import fes from '../2019.json';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
@@ -12,6 +13,28 @@ const LeafMap = dynamic(
 )
 
 const Index = () => {
+  const [height, setHeight] = useState(null)
+
+  if (process.browser) {
+      useEffect(() => {
+        setHeight(window.innerHeight);
+      }, [
+          window.innerHeight
+      ])
+  }
+  
+  const resizeHandler = () => {
+      setHeight(window.innerHeight);
+  }
+
+  useEffect(() => {
+      window.addEventListener('resize', resizeHandler);
+      resizeHandler();
+      return function cleanup() {
+        window.removeEventListener('resize', resizeHandler);
+      };
+  }, [])
+
   return (
     <>
       <Head>
@@ -29,7 +52,7 @@ const Index = () => {
         <TemporaryDrawer fes={fes}></TemporaryDrawer>
         <div className="tabs"></div>
       </div>
-      <LeafMap fes={fes} full={true}></LeafMap>
+      <LeafMap fes={fes} full={true} height={height}></LeafMap>
       <style jsx global>{`
                 body {
                     padding: 0;

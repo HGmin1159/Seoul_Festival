@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import L from 'leaflet';
 import mun from '../seoul_municipalities_geo_simple.json';
+import queryString from 'query-string';
 
 let map, markerLayer, marker, layer;
 
@@ -21,7 +22,9 @@ function isInside(marker, poly) {
     return inside;
 };
 
-const LeafMap = ({ fes, res, full, invalidate, preventSwipe }) => {
+let restaurantMarkers = {};
+
+const LeafMap = ({ fes, res, full, invalidate, preventSwipe, open, height}) => {
     const [init, setInit] = useState(true);
 
     const Icon = L.icon({
@@ -30,10 +33,11 @@ const LeafMap = ({ fes, res, full, invalidate, preventSwipe }) => {
     });
 
     let style;
+    
     if (full) {
         style = <style jsx>{`
                             #map {
-                                height: 96vh;
+                                height: ${height - 48}px;
                                 width: 100vw;
                                 z-index: 1;
                             }
@@ -50,8 +54,8 @@ const LeafMap = ({ fes, res, full, invalidate, preventSwipe }) => {
     } else {
         style = <style jsx>{`
                             #map {
-                                width: 90vw;
-                                height: 40vh;
+                                width: 100%;
+                                height: 100%;
                                 min-height: 256px;
                                 margin: auto;
                             }
@@ -71,12 +75,50 @@ const LeafMap = ({ fes, res, full, invalidate, preventSwipe }) => {
         const colorCode = colorScheme[[22,15].includes(feature.properties.ESRI_PK)? 1 : feature.properties.ESRI_PK % colorScheme.length];
         // console.log(layer.getBounds())
         const festLayer = L.layerGroup();
+
+        // const getLink = (fes) => {
+        //     return (
+        //         <Link href="/p/[id]" as={`/p/${
+        //             queryString.stringify({
+        //                 id: fes.id,
+        //                 name: fes.name,
+        //                 x: fes.x,
+        //                 y: fes.y,
+        //                 cluster: fes.cluster,
+        //                 man: fes.man,
+        //                 exp: fes.explanation.replace(/(\\(n|t))/g, ''),
+        //                 region: fes.region.replace(/(\\(n|t))/g, ''),
+        //                 place: fes.place.replace(/(\\(n|t))/g, '')
+        //             })}`}>
+        //             <a>
+        //             {fes.name}<br></br><img src={`img/${fes.id}.jpg`}></img>
+        //             </a>
+        //         </Link>
+        //     )
+        // }
+
         for (let f of fes) {
             if (isInside(f, feature.geometry.coordinates)) {
                 L.marker(
                     [f.y, f.x],
                 ).bindPopup(
-                    `${f.name}<br><img src='img/${f.id}.jpg'></img>`
+                    `${f.name}<br></br>
+                    <a href="${
+                        `/p/${
+                            queryString.stringify({
+                                id: f.id,
+                                name: f.name,
+                                x: f.x,
+                                y: f.y,
+                                cluster: f.cluster,
+                                man: f.man,
+                                exp: f.explanation.replace(/(\\(n|t))/g, ''),
+                                region: f.region.replace(/(\\(n|t))/g, ''),
+                                place: f.place.replace(/(\\(n|t))/g, '')
+                            })}`
+                    }">
+                    <img src="img/${f.id}.jpg"}></img>
+                    </a>`
                 ).addTo(festLayer);
             }
         }
@@ -110,7 +152,6 @@ const LeafMap = ({ fes, res, full, invalidate, preventSwipe }) => {
             map.addEventListener("click", zoomOutHandler);
         }
         
-
         layer.addEventListener("click", zoomInHandler);
         
         layer.setStyle({
@@ -120,30 +161,37 @@ const LeafMap = ({ fes, res, full, invalidate, preventSwipe }) => {
         });
     }
 
+    useEffect(()=>{
+        if (!full) return;
+        if (map) {
+            map.remove();
+        }
+        map = L.map('map').fitBounds([
+            [37.413294, 126.734086], 
+            [37.715133, 127.269311]
+        ]);
+        L.geoJSON(mun, {
+            onEachFeature: municipalHandler
+        }).addTo(map);
+        
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    });
+
     useEffect(() => {
-        if (full) {
-            map = L.map('map').fitBounds([
-                [37.413294, 126.734086], 
-                [37.715133, 127.269311]
-            ]);
-            L.geoJSON(mun, {
-                onEachFeature: municipalHandler
-            }).addTo(map);
-            // markerLayer = L.layerGroup();
-            
-            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-        } else if (invalidate) {
+        if (invalidate) {
             // console.log("invalidate");
             if (!init) {
                 map.remove();
+                restaurantMarkers = {};
             }
             map = L.map('map').setView([fes.y, fes.x], 15);
             marker = L.marker([fes.y, fes.x]).bindPopup(fes.name)
                 .addTo(map).openPopup();
+            
             for (let r of res) {
-                L.marker(
+                restaurantMarkers[r.id] = L.marker(
                     [r.y, r.x],
                     { icon: Icon }
                 ).bindPopup(
@@ -165,7 +213,11 @@ const LeafMap = ({ fes, res, full, invalidate, preventSwipe }) => {
         }
     }, [fes, invalidate])
 
-
+    useEffect(()=>{
+        if (open) {
+            restaurantMarkers[open].openPopup();
+        }
+    }, [open])
 
     return (
         <div className="mapContainer"

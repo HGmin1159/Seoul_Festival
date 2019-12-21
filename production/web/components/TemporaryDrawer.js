@@ -1,20 +1,14 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Form from './Form';
-import Link from 'next/link';
 import MenuIcon from '@material-ui/icons/Menu';
-import queryString from 'query-string';
+import FestivalList from './FestivalList';
 
 const useStyles = makeStyles({
     list: {
         width: "67vmin",
-        maxWidth: "300px"
+        maxWidth: "300px",
+        minWidth: "256px"
     },
     btn: {
         zIndex: 2,
@@ -36,7 +30,7 @@ export default function TemporaryDrawer({ fes, isWide }) {
     const [state, setState] = React.useState({
         left: false
     });
-    const [word, setWord] = React.useState('');
+    const [] = React.useState('');
 
     const toggleDrawer = (side, open) => event => {
         if (event.type === 'keydown' && event.key !== 'Escape') {
@@ -51,59 +45,7 @@ export default function TemporaryDrawer({ fes, isWide }) {
             className={classes.list}
             onKeyDown={toggleDrawer(side, false)}
         >
-            <Form searchHandler={setWord}></Form>
-            <Divider />
-            <p>찾는 축제 목록</p>
-            <List>
-                {fes.map((fes) => (
-                    (fes.name.indexOf(word) != -1)
-                    &&
-                    <ListItem button key={fes.id}>
-                        <Link href="/p/[id]" as={`/p/${
-                            queryString.stringify({
-                                id: fes.id,
-                                name: fes.name,
-                                x: fes.x,
-                                y: fes.y,
-                                cluster: fes.cluster,
-                                man: fes.man,
-                                exp: fes.explanation.replace(/(\\(n|t))/g, ''),
-                                region: fes.region.replace(/(\\(n|t))/g, ''),
-                                place: fes.place.replace(/(\\(n|t))/g, '')
-                        })}`}>
-                            <a>
-                                <ListItemIcon>
-                                    <img src={`/img/${fes.id}.jpg`}></img>
-                                </ListItemIcon>
-                                <ListItemText primary={fes.name} />
-                                <span>{fes.period}</span>
-                            </a>
-                        </Link>
-                    </ListItem>
-
-                ))}
-            </List>
-            <style jsx>{`
-                img {
-                    width: 50vmin;
-                    max-width: 256px;
-                    height: 50vmin;
-                    max-height: 256px;
-                }
-                a {
-                    text-decoration: none;
-                    color: black;
-                    cursor: pointer;
-                    background-color: #f9f9f9;
-                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                    width: 50vmin;
-                    padding: 4px 4px;
-                }
-                p {
-                    margin: 4%;
-                }
-            `}</style>
-
+            <FestivalList fes={fes} />
         </div>
     );
 

@@ -12,17 +12,7 @@ import TemporaryDrawer from './TemporaryDrawer';
 import BarChart from './BarChart';
 import clt from '../clt_labels.json';
 import Pie from './Pie';
-//
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Form from './Form';
-import Link from 'next/link';
-
-import queryString from 'query-string';
-// const querystring = require('querystring');
+import FestivalList from './FestivalList';
 
 const LeafMap = dynamic(
     () => import('./LeafMap'),
@@ -61,41 +51,59 @@ function a11yProps(index) {
     };
 }
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        backgroundColor: 'primary',
-        width: '100vw',
-    },
-    root2: {
-        flexDirection: 'row',
-        position: 'sticky',
-        top: 0
-    },
-    tabs: {
-        flexGrow: 0.9
-    },
-    panel: {
-        overflowY: 'auto',
-        height: '100vh',
-        maxWidth: '800px'
-    }
-}));
-
 export default function FullWidthTabs({ fe, res, fes }) {
     const [orientation, setOrientation] = useState(1);
     const [disabled, setDisabled] = useState(false);
     const [isWide, setIsWide] = useState(false);
-    const [word, setWord] = React.useState('');
+    const [open, setOpen] = useState(null);
+
+    const [height, setHeight] = useState(null)
+    const [width, setWidth] = useState(null)
+    if (process.browser) {
+        useEffect(() => setHeight(window.innerHeight), [
+            window.innerHeight
+        ])
+        useEffect(() => setWidth(window.innerWidth), [
+            window.innerWidth
+        ])
+    }
 
     const resizeHandler = () => {
-        setOrientation(window.innerWidth < window.innerHeight || window.innerHeight > 500);
-        setIsWide(window.innerWidth > 1000);
+        setOrientation(window.innerWidth < window.innerHeight);
+        setIsWide(window.innerWidth > 1024);
     }
 
     useEffect(() => {
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
+        return function cleanup() {
+            window.removeEventListener('resize', resizeHandler);
+        };
     }, [])
+
+    useEffect(()=>{
+        setOpen(null)
+    }, [fe])
+
+    const useStyles = makeStyles(() => ({
+        root: {
+            backgroundColor: 'primary',
+            width: '100vw',
+        },
+        root2: {
+            flexDirection: 'row',
+            position: 'sticky',
+            top: 0
+        },
+        tabs: {
+            flexGrow: 0.9
+        },
+        panel: {
+            overflowY: 'auto',
+            height: height-58,
+            width: '100%'
+        }
+    }));
 
     const classes = useStyles();
     const theme = useTheme();
@@ -127,38 +135,7 @@ export default function FullWidthTabs({ fe, res, fes }) {
             </AppBar>
             <div className="view-container">
                 <div className="fest-list">
-                    <Form searchHandler={setWord}></Form>
-                    <Divider />
-                    <p className="fest-list-p">찾는 축제 목록</p>
-                    <List>
-                        {fes.map((fes) => (
-                            (fes.name.indexOf(word) != -1)
-                            &&
-                            <ListItem button key={fes.id}>
-                                <Link href="/p/[id]" as={`/p/${
-                                    queryString.stringify({
-                                        id: fes.id,
-                                        name: fes.name,
-                                        x: fes.x,
-                                        y: fes.y,
-                                        cluster: fes.cluster,
-                                        man: fes.man,
-                                        exp: fes.explanation.replace(/(\\(n|t))/g, ''),
-                                        region: fes.region.replace(/(\\(n|t))/g, ''),
-                                        place: fes.place.replace(/(\\(n|t))/g, '')
-                                })}`}>
-                                    <a className="fest-list-a">
-                                        <ListItemIcon>
-                                            <img src={`/img/${fes.id}.jpg`} className="fest-list-img"></img>
-                                        </ListItemIcon>
-                                        <ListItemText primary={fes.name} />
-                                        <span>{fes.period}</span>
-                                    </a>
-                                </Link>
-                            </ListItem>
-
-                        ))}
-                    </List>
+                    <FestivalList fes={fes}/>
                 </div>
                 <SwipeableViews
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
@@ -169,8 +146,8 @@ export default function FullWidthTabs({ fe, res, fes }) {
                 >
                     <TabPanel value={value} index={0} dir={theme.direction} >
                         <div className="gridContainer1">
-                            <div>
-                                <img className="info-img" src={`/img/${fe.id}.jpg`}></img>
+                            <img className="info-img" src={`/img/${fe.id}.jpg`}></img>
+                            <div className="info">
                                 <p className="info-text info-title">{fe.name}</p>
                                 <p className="info-text text1">개최지역: {fe.region}</p>
                                 <p className="info-text text2">축제장소: {fe.place}</p>
@@ -185,29 +162,24 @@ export default function FullWidthTabs({ fe, res, fes }) {
                         </div>
                     </TabPanel>
                     <TabPanel value={value} index={1} dir={theme.direction}>
-                    <div className="gridContainer">
-                        
-                        <LeafMap fes={fe} res={res} key={value === 1} invalidate={value === 1} preventSwipe={(b)=>setDisabled(b)}></LeafMap>
-                        
-                        <div className="scroll">
-                            <ul className="ul">
-                                {res.map(res =>
-                                    (<a href={res.place_url} key={res.id}>
-                                        <li className="info-li">
+                        <div className="gridContainer">
+                            <LeafMap fes={fe} res={res} key={value === 1} invalidate={value === 1} preventSwipe={(b)=>setDisabled(b)} open={open} />
+                            <div className="scroll">
+                                <ul className="ul">
+                                    {res.map(res =>
+                                        <li className="info-li" key={res.id} onClick={()=>setOpen(res.id)}>
                                             <Restaurant res={res}></Restaurant>
                                         </li>
-                                    </a>
-                                    )
-                                )}
-                            </ul>
-                            <footer>
-                                <div>
-                                    Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
-                                <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
-                                </div>
-                            </footer>
+                                    )}
+                                </ul>
+                                <footer>
+                                    <div>
+                                        Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
+                                    <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+                                    </div>
+                                </footer>
+                            </div>
                         </div>
-                    </div>
                     </TabPanel>
                 </SwipeableViews>
             </div>
@@ -224,8 +196,11 @@ export default function FullWidthTabs({ fe, res, fes }) {
             <style jsx>{`
                 .gridContainer1 {
                     display: grid;
-                    grid-template-rows: minmax(256px, 1fr) 40vmax 40vmax;
-                    grid-auto-columns: 100%;
+                    grid-template-rows: ${isWide || !orientation? 'auto minmax(256px,'+ Math.min((width-300*isWide)/2, height-58) +'px)':'auto auto minmax(256px,100vmin) minmax(256px,100vmin)'};
+                    grid-template-columns: ${isWide || !orientation? '1fr 1fr':'100%'};
+                }
+                .info {
+                    ${isWide || !orientation? 'grid-row: 1/2; grid-column: 2/3':''}
                 }
                 .bar {
                     position: relative;
@@ -236,11 +211,14 @@ export default function FullWidthTabs({ fe, res, fes }) {
                     position: relative;
                     width: 90%;
                     margin: 10px auto;
+                    ${isWide || !orientation? 'grid-column: 2/3;':''}
                 }
                 .gridContainer {
                     display: grid;
-                    grid-template-rows: minmax(256px, 1fr) 50vmax;
                     grid-auto-columns: 100%;
+                    width: 90%; margin: 10px auto;
+                    ${orientation || height > 500 ? 'grid-template-rows: 1fr 1fr;':'grid-template-rows: minmax(256px, 1fr);'}
+                    height: ${height - 78}px;
                 }
                 .ul {
                     padding-inline-start: 0;
@@ -248,8 +226,10 @@ export default function FullWidthTabs({ fe, res, fes }) {
                 }
                 .scroll {
                     overflow: auto;
+                    height: 50vh;
                 }
                 .info-img {
+                    ${isWide || !orientation? 'grid-row: 1/2; grid-column: 1/2':''}
                     display: block;
                     width: 90%;
                     border: solid;
@@ -275,7 +255,6 @@ export default function FullWidthTabs({ fe, res, fes }) {
                 .info-text.text2 {
                 }
                 .info-text.text3 {
-                    
                 }
                 .info-li {
                     list-style-type: none;
@@ -284,58 +263,28 @@ export default function FullWidthTabs({ fe, res, fes }) {
                     margin: auto 0;
                     border-bottom: 1px solid #fbe4d4;
                 }
-
                 .info-li:hover {
                     background-color: rgba(245, 132, 84, 0.5);
                 }
-
-                ul a {
-                    text-decoration: none;
-                    -webkit-text-decoration: none;
-                    color: black;
-                }
                 ul {
-                    display: ${orientation ? '' : 'none'};
-                    ${isWide? null:'width: 90%; margin: 10px auto;'}
+                    display: ${orientation || height > 500 ? 'block' : 'none'};
                 }
                 footer {
-                    font-size: 0.5rem;
-                    margin: 5vw;
-                }
-                @media (max-width: 1000px) {
-                    .fest-list {
-                        display: none;
-                    }
+                    font-size: 0.8rem;
+                    margin: 1vw;
                 }
                 .fest-list {
                     max-width: 300px;
                     overflow-y: auto;
-                    height: 100vh;
-                }
-                .fest-list-img {
-                    width: 50vmin;
-                    max-width: 256px;
-                    height: 50vmin;
-                    max-height: 256px;
-                }
-                .fest-list-a {
-                    text-decoration: none;
-                    color: black;
-                    cursor: pointer;
-                    background-color: #f9f9f9;
-                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                    width: 50vmin;
-                    max-width: 256px;
-                    padding: 4px 4px;
-                }
-                .fest-list-p {
-                    margin: 4%;
+                    height: ${height-58}px;
+                    ${isWide? '':'display: none;'}
                 }
                 .view-container {
                     display: ${isWide? 'grid':''};
                     justify-content: center;
                     justify-items: center;
                     grid-template-columns: auto 1fr;
+                    grid-gap: 10px;
                 }
             `}</style>
         </div>
