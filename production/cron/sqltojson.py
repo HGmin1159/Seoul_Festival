@@ -17,7 +17,7 @@ def fetch_fes():
     return lst
 
 def attach_man_ratio(lst):
-    with open('output.csv') as f:
+    with open('output.csv', encoding="utf-8") as f:
         f.readline()
         for line in f:
             a = line.split(',')
@@ -29,27 +29,25 @@ lst = fetch_fes()
 
 attach_man_ratio(lst)
 
-arr = []
 for f in lst:
-    matches = re.finditer(r'\b(\d{1,2})(\.|월)\s?(\d{1,2})', f['period'])
-    early = (13, 0)
+    prev = None
+    f['date'] = []
+    matches = re.finditer(r'\b((\d{4})(\.|년)\s?)?(\d{1,2})(\.|월)\s?(\d{1,2})', f['period'])
     for m in matches:
-        temp = (int(m.group(1)), int(m.group(3)))
-        if temp < early:
-            early = temp
-    if early < (13, 0):
-        f['date'] = {'month': early[0], 'day': early[1]}
-        arr.append(f)
-arr.sort(key=lambda f: f['date']['month']*40 + f['date']['day'])
-
+        year = int(m.group(2)) if m.group(2) != None else None
+        month = int(m.group(4))
+        day = int(m.group(6))
+        if year != None:
+            prev = year
+        elif prev != None:
+            year = prev
+        else:
+            year = 2019
+        f['date'].append({
+            "year": year,
+            "month": month,
+            "day": day
+        })
 
 with open(pathto, 'w', encoding="utf-8") as f:
-    f.write(json.dumps(arr, ensure_ascii=False))
-
-# for i in range(10):
-#     print(lst[i])
-
-# with open('output.csv') as f:
-#     f.readline()
-#     for line in f:
-#         print(line)
+    f.write(json.dumps(lst, ensure_ascii=False))

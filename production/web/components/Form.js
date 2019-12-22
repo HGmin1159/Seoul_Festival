@@ -1,10 +1,10 @@
-const Form = ({searchHandler}) => {
+const Form = ({searchHandler, prevHandler}) => {
 
-  Date.prototype.toDateInputValue = (function () {
-    let local = new Date(this);
-    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-    return local.toJSON().slice(0, 10);
-  });
+  // Date.prototype.toDateInputValue = (function () {
+  //   let local = new Date(this);
+  //   local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+  //   return local.toJSON().slice(0, 10);
+  // });
 
   return (
     <>
@@ -13,6 +13,11 @@ const Form = ({searchHandler}) => {
         <input type="text" onInput={e=>{
           searchHandler(e.target.value);
         }}></input>
+        <br></br>
+        <input type="checkbox" if="prev" onInput={e=>{
+          prevHandler(e.target.checked);
+        }}></input>
+        <label htmlFor="prev">지난 축제</label>
         {/* <div className="dropdown-content">
           <label htmlFor="male">
             <input type="radio" name="gender" value="male" id="male"></input>

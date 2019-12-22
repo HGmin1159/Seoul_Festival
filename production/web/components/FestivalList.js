@@ -8,17 +8,52 @@ import Form from './Form';
 import Link from 'next/link';
 import queryString from 'query-string';
 
+const getMaxFestDate = fes => {
+    return(
+    fes.date.map(d=>(
+        new Date(d.year, d.month-1, d.day)
+    )).reduce((prev, curr) => {
+        // console.log((prev.getTime() < curr.getTime()? curr:prev).getMonth())
+        return prev.getTime() < curr.getTime()? curr:prev
+    }, new Date(0,0,0))
+    )
+}
+
+const isCurrent = fes => (
+    ((new Date()).getYear() < getMaxFestDate(fes).getYear())
+    ||
+    (
+        ((new Date()).getYear() === getMaxFestDate(fes).getYear())
+        &&
+        ((new Date()).getMonth() <= getMaxFestDate(fes).getMonth())
+    )
+)
+
 const FestivalList = ({fes}) => {
     const [word, setWord] = useState('');
+    const [prev, setPrev] = useState(false);
+
+    const getSorted = (fes, prev) => {
+        const filtered = fes.filter(f=>(
+            f.name.indexOf(word) != -1
+            &&
+            (isCurrent(f) ^ prev)
+        ));
+        filtered.sort(
+            function (a, b) {
+                return +(getMaxFestDate(a).getTime() > getMaxFestDate(b).getTime()) || +(getMaxFestDate(a).getTime() === getMaxFestDate(b).getTime()) - 1;
+            }
+        );
+        return filtered;
+    }
+
     return (
         <>
-            <Form searchHandler={setWord} />
+            <Form searchHandler={setWord} prevHandler={setPrev} />
             <Divider />
             <p className="fest-list-p">찾는 축제 목록</p>
             <List>
-                {fes.map((fes) => (
-                    (fes.name.indexOf(word) != -1)
-                    &&
+                {getSorted(fes, prev).map((fes) => (
                     <ListItem button key={fes.id}>
                         <Link href="/p/[id]" as={`/p/${
                             queryString.stringify({
