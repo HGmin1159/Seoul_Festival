@@ -14,7 +14,7 @@ const Form = ({searchHandler, prevHandler}) => {
           searchHandler(e.target.value);
         }}></input>
         <br></br>
-        <input type="checkbox" if="prev" onInput={e=>{
+        <input type="checkbox" id="prev" onInput={e=>{
           prevHandler(e.target.checked);
         }}></input>
         <label htmlFor="prev">지난 축제</label>

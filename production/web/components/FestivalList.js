@@ -7,6 +7,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Form from './Form';
 import Link from 'next/link';
 import queryString from 'query-string';
+import 'lazysizes';
+import 'lazysizes/plugins/parent-fit/ls.parent-fit';
+
 
 const getMaxFestDate = fes => {
     return(
@@ -69,7 +72,7 @@ const FestivalList = ({fes}) => {
                             })}`}>
                             <a className="fest-list-a">
                                 <ListItemIcon>
-                                    <img src={`/img/${fes.id}.jpg`} className="fest-list-img"></img>
+                                    <img data-src={`/img/${fes.id}.jpg`} className="fest-list-img lazyload"></img>
                                 </ListItemIcon>
                                 <ListItemText primary={fes.name} />
                                 <span>{fes.period}</span>

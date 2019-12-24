@@ -38,6 +38,7 @@ package-lock.json
 out/
 clt_labels.csv
 csvtojson.py
+sqltojson.py
 next.config.js
 output.csv
 push_img_name.py
@@ -48,3 +49,4 @@ SimpleList.js
 2019 copy.json
 2019old.json
 SEOUL_FESTIVAL.db
+memo.txt
