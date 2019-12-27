@@ -9,6 +9,8 @@ import requests
 import json
 
 from selenium import webdriver
+# from pyvirtualdisplay import Display
+
 import re
 from bs4 import BeautifulSoup
 import sqlite3
@@ -35,7 +37,15 @@ end_date = '{}'.format((datetime.now()+ timedelta(days=30)).strftime("%Y%m%d"))
 
 
 # %%
-driver = webdriver.Chrome('/usr/bin/chromedriver')
+# display = Display(visible=0, size=(1024, 768))
+# display.start()
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--window-size=1420,1080')
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--disable-gpu')
+driver = webdriver.Chrome(chrome_options=chrome_options)
+
 search_period = [start_date, end_date]
 page_num = 1
 
@@ -89,7 +99,7 @@ for page_num in range(1, last_page_num+1):
 
         driver.get('https://www.mcst.go.kr/kor/s_culture/festival/festivalList.jsp?pMenuCD=&pCurrentPage={}&pSearchType=01&pSearchWord=&pSeq=&pSido=01&pOrder=01down&pPeriod=&fromDt={}&toDt={}search_period'.format(page_num, search_period[0], search_period[1]))
     page_num += 1
-
+driver.quit()
 
 # %%
 festival_new = pd.DataFrame(res)
@@ -161,7 +171,7 @@ festival_new['축제장소_수정'] = np.where(festival_new['축제장소'].str.
 
 # %%
 url = "https://dapi.kakao.com/v2/local/search/keyword.json"
-apikey = "7f6745340f5774fddc3560cf93bf54b3" 
+apikey = "" 
 
 result = list()
 no_info_festival = list()
@@ -263,116 +273,18 @@ add_new_table = pd.concat([add_table, new_values], sort = False).iloc[1:]
 add_new_table['festival_id'] = add_new_table['festival_id'].astype(int)
 add_new_table['img'] = add_new_table['img'].astype(str)
 
-for i in range(add_new_table.shape[0]):
+def db_add_festival(nparr, table_nm, con):
     cur = con.cursor()
-    cur.execute("INSERT INTO {} Values {};".format(table_nm, str(tuple(add_new_table.iloc[i].values)).replace('nan', 'NULL').replace('None', 'NULL')))
+    a = tuple(None if pd.isnull(j) else str(j) for j in tuple(nparr))
+    cur.execute(f"INSERT INTO {table_nm} Values ({','.join(['?']*len(a))});", a)
     cur.close()
 
-con.commit()
-con.close()
-
-# %% [markdown]
-# # DB에 음식점 추가
-
-# %%
-# 음식점 정보 가져오기(카카오)
-
-# import sqlite3, requests
-from collections import OrderedDict
-
-def create_restaurants(c):
-    c.execute("DROP TABLE IF EXISTS RESTAURANT_INFO")
-    c.execute('''CREATE TABLE "RESTAURANT_INFO" (
-            "id" INTEGER PRIMARY KEY,
-            "place_name" TEXT,
-            "category_name" TEXT,
-            "category_group_code" TEXT,
-            "category_group_name" TEXT,
-            "phone" TEXT,
-            "address_name" TEXT,
-            "road_address_name" TEXT,
-            "x" REAL,
-            "y" REAL,
-            "place_url" TEXT
-    );''')
-
-def create_festival_restaurants(c):
-    c.execute("DROP TABLE IF EXISTS FESTIVAL_RESTAURANT")
-    c.execute('''CREATE TABLE FESTIVAL_RESTAURANT (
-        festival_id INTEGER,
-        restaurants_id INTEGER,
-        distance INTEGER,
-        FOREIGN KEY(festival_id) REFERENCES FESTIVAL_INFO(festival_id) ON DELETE SET NULL,
-        FOREIGN KEY(restaurants_id) REFERENCES RESTAURANT_INFO(id) ON DELETE SET NULL
-    )''')
-
-KEYS = ['id', 'place_name', 'category_name', 'category_group_code',
-        'category_group_name', 'phone', 'address_name', 'road_address_name',
-        'x', 'y', 'place_url', 'distance']
-
-def get_restaurant(lng, lat, page):
-    rsp = requests.get(url,
-                       params={"category_group_code": "FD6",
-                               'x': str(lng), 'y': str(lat),
-                               "radius": 1000, "page": page, "size": 15},
-                       headers={"Authorization": "KakaoAK " + apikey}
-                       )
-    if rsp.status_code != 200:
-        raise Exception(rsp.status_code)
-    return rsp.json()
-
-def db_session_add(doc, pk, c):
-    for d in doc:
-        d = OrderedDict((k, d[k]) for k in KEYS)
-        t = []
-        for k, v in d.items():
-            if k != "id" and k != "distance":
-                t.append(v)
-            elif k == "id":
-                t.append(int(v))
-                res_id = int(v)
-            else:
-                dist = int(v)
-        c.execute('INSERT INTO FESTIVAL_RESTAURANT VALUES (?,?,?)',
-                  (pk, res_id, dist))
-        c.execute(
-            'INSERT OR IGNORE INTO RESTAURANT_INFO VALUES (?,?,?,?,?,?,?,?,?,?,?)', tuple(t))
-
-def fetch_fes(c):
-    """
-    in: connection
-    out: list
-    """
-    c.execute("""SELECT festival_id, x, y 
-                FROM FESTIVAL_INFO
-                WHERE x > 0;""")
-    lst = [dict(zip(('id', 'x', 'y'), row)) for row in c]
-    return lst
-
-
-url = "https://dapi.kakao.com/v2/local/search/category.json"
-
-con = sqlite3.connect(db_path)
-
-cur = con.cursor()
-
-create_restaurants(cur)
-
-create_festival_restaurants(cur)
-
-for festival in fetch_fes(cur):
-    page = 1
-    resp = get_restaurant(festival['x'], festival['y'], page)
-    while not resp["meta"]["is_end"]:
-        doc = resp["documents"]
-        db_session_add(doc, festival['id'], cur)
-        page += 1
-        resp = get_restaurant(festival['x'], festival['y'], page)
-    doc = resp["documents"]
-    db_session_add(doc, festival['id'], cur)
+for i in range(add_new_table.shape[0]):
+    db_add_festival(add_new_table.iloc[i].values, table_nm, con)
 
 con.commit()
 con.close()
+
 
 # %% [markdown]
 # # 연령 클러스터 예측
@@ -388,6 +300,9 @@ table_columns = [i[1] for i in cur]
 cur.execute('SELECT * FROM FESTIVAL_CLUSTER')
 cluster_before = pd.DataFrame(cur.fetchall(), columns=['festival_id', '축제명', '클러스터'])
 cur.close()
+# print(cluster_before['festival_id'].values[-1])
+with open("last_id.txt", 'w') as f:
+    f.write(str(cluster_before['festival_id'].values[-1]))
 
 
 # %%
@@ -511,9 +426,7 @@ def insert_values_to_table(db_path, table_nm, column_info, data):
     con = sqlite3.connect(db_path, timeout=100)
       
     for i in range(data.shape[0]):
-        cur = con.cursor()
-        cur.execute("INSERT INTO {} Values {};".format(table_nm, str(tuple(data.iloc[i].values)).replace('nan', 'NULL')))
-        cur.close()
+        db_add_festival(data.iloc[i].values, table_nm, con)
     
     con.commit()
     con.close()

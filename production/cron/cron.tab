@@ -6,6 +6,6 @@
 
 # reference : http://hleecaster.com/task-scheduling-in-windows-using-cron/
 
-00 12 1 * * cd /home/ubuntu/cron && /home/ubuntu/cron/final_auto_crawling_db_update.py && /home/ubuntu/cron/man_proportion_prediction.R && /home/ubuntu/cron/image_retriever.py && /home/ubuntu/cron/sqltojson.py
-00 12 2 * * scp -i /home/ubuntu/.ssh/sfshiny.pem /home/ubuntu/cron/SEOUL_FESTIVAL.db ubuntu@ec2-35-170-234-69.compute-1.amazonaws.com:/home/ubuntu/sfplumber
-00 12 4 * * cd /home/ubuntu/web && /home/ubuntu/cron/git-update.sh
+00 12 * * * cd /home/ubuntu/cron && /home/ubuntu/cron/final_auto_crawling_db_update.py && /home/ubuntu/cron/man_proportion_prediction.R >> /home/ubuntu/cron/predlog.log && /home/ubuntu/cron/image_retriever.py && /home/ubuntu/cron/sqltojson.py && /home/ubuntu/cron/get_restaurant.py && scp -i /home/ubuntu/.ssh/sfshiny.pem /home/ubuntu/cron/SEOUL_FESTIVAL.db ubuntu@ec2-35-170-234-69.compute-1.amazonaws.com:/home/ubuntu/sfplumber
+
+00 13 * * * cd /home/ubuntu/web && /home/ubuntu/cron/git-update.sh

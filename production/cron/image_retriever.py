@@ -4,6 +4,8 @@ from contextlib import closing
 import sqlite3
 import re
 
+with open("last_id.txt") as f:
+    last_id = int(f.readline())
 
 def getfile(url, filename, timeout=45):
     with closing(urllib.request.urlopen(url, timeout=timeout)) as fp:
@@ -26,8 +28,8 @@ def fetch_fes(c):
     out: list
     """
     c.execute("""SELECT festival_id, img
-                FROM FESTIVAL_INFO;
-                """)
+                FROM FESTIVAL_INFO
+                WHERE festival_id > ?;""", (last_id, ))
     lst = [dict(zip(('id', 'img'), row)) for row in c]
     return lst
 

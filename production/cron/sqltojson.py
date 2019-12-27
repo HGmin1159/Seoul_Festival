@@ -1,17 +1,22 @@
 #!/usr/bin/python3
 import sqlite3, json, re
 
+with open("last_id.txt") as f:
+    last_id = int(f.readline())
+
 pathfrom = "SEOUL_FESTIVAL.db"
 pathto = "../web/2019.json"
 
-FKEYS = ('id', 'name', 'x', 'y', 'period', 'explanation', 'cluster', 'region', 'place')
+FKEYS = ('id', 'name', 'x', 'y', 'period', 'explanation', 'cluster', 'region', 'place', 'link')
 
 def fetch_fes():
     conn = sqlite3.connect(pathfrom)
     c = conn.cursor()
-    c.execute("""SELECT festival_info.festival_id, festival_info.축제명, x, y, 개최기간, 축제설명, 클러스터, 개최지역, 축제장소
+    c.execute("""SELECT festival_info.festival_id, festival_info.축제명, x, y, 개최기간, 축제설명, 클러스터, 개최지역, 축제장소, 관련_누리집
                 FROM FESTIVAL_INFO, FESTIVAL_CLUSTER
-                WHERE festival_info.festival_id = festival_cluster.festival_id AND x > 0;""")
+                WHERE festival_info.festival_id > ?
+                AND x > 0
+                AND festival_info.festival_id = festival_cluster.festival_id;""", (last_id, ))
     lst = [dict(zip(FKEYS, row)) for row in c]
     conn.close()
     return lst
@@ -42,12 +47,17 @@ for f in lst:
         elif prev != None:
             year = prev
         else:
-            year = 2019
+            year = 2020
         f['date'].append({
             "year": year,
             "month": month,
             "day": day
         })
+
+with open(pathto) as f:
+    j = json.load(f)
+
+lst = j + lst
 
 with open(pathto, 'w', encoding="utf-8") as f:
     f.write(json.dumps(lst, ensure_ascii=False))
