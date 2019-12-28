@@ -120,7 +120,7 @@ export default function FullWidthTabs({ fe, res, fes }) {
     return (
         <div className={classes.root}>
             <AppBar position="static" color="default" className={classes.root2}>
-                <TemporaryDrawer fes={fes} isWide={isWide}></TemporaryDrawer>
+                <TemporaryDrawer fes={fes} isWide={isWide} height={height}></TemporaryDrawer>
                 <Tabs
                     value={value}
                     onChange={handleChange}
@@ -151,6 +151,7 @@ export default function FullWidthTabs({ fe, res, fes }) {
                                 <p className="info-text info-title">{fe.name}</p>
                                 <p className="info-text text1">개최지역: {fe.region}</p>
                                 <p className="info-text text2">축제장소: {fe.place}</p>
+                                <p className="info-text link">누리집: <a href={fe.link}>{fe.link}</a></p>
                                 <p className="info-text text3">{fe.exp}</p>
                             </div>
                             <div className="bar">
@@ -229,7 +230,7 @@ export default function FullWidthTabs({ fe, res, fes }) {
                     height: 50vh;
                 }
                 .info-img {
-                    ${isWide || !orientation? 'grid-row: 1/2; grid-column: 1/2':''}
+                    ${isWide || !orientation? 'grid-row: 1/2; grid-column: 1/2;':''}
                     display: block;
                     width: 90%;
                     border: solid;
@@ -240,21 +241,19 @@ export default function FullWidthTabs({ fe, res, fes }) {
                     font-weight: 500;
                 }
                 .info-text {
+                    display: block;
+                    width: 86%;
                     margin: 10px auto;
-                    font-size: 1.2rem;
-                    width: 90%;
-                    color: rgba(0,0,0,0.87);
-                    background-color: #f5f5f5;
-                    border: 1px solid rgba(0,0,0,0.87);
-                    border-radius: 2px;
-                    padding: 0 10px;
-                    box-shadow: 0px 2px 4x 0px rgba(0,0,0,0.2);
                 }
                 .info-text.text1 {
                 }
                 .info-text.text2 {
                 }
                 .info-text.text3 {
+                }
+                .info-text.link {
+                    text-overflow: ellipsis;
+                    overflow: hidden;
                 }
                 .info-li {
                     list-style-type: none;

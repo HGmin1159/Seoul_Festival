@@ -49,7 +49,7 @@ const Index = () => {
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
       </Head>
       <div className="root2">
-        <TemporaryDrawer fes={fes}></TemporaryDrawer>
+        <TemporaryDrawer fes={fes} height={height}></TemporaryDrawer>
         <div className="tabs"></div>
       </div>
       <LeafMap fes={fes} full={true} height={height}></LeafMap>
