@@ -7,6 +7,8 @@ git pull
 
 /home/ubuntu/cron/final_auto_crawling_db_update.py >> /home/ubuntu/cron/log/cronlog.log 2>&1
 
+/home/ubuntu/cron/cluster.py >> /home/ubuntu/cron/log/cronlog.log 2>&1
+
 /home/ubuntu/cron/man_proportion_prediction.R >> /home/ubuntu/cron/predlog.log
 
 /home/ubuntu/cron/image_retriever.py >> /home/ubuntu/cron/log/cronlog.log 2>&1

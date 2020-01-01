@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+# https://github.com/HGmin1159/Seoul_Festival
 # %% [markdown]
 # # 연령 클러스터 예측
 
@@ -175,12 +175,3 @@ column_info = "festival_id INTEGER, 축제명 TEXT, 클러스터 INTEGER"
 data = target_festival[['festival_id', '축제명', '클러스터']]
 
 insert_values_to_table(db_path, table_nm, column_info, data)
-
-
-# %%
-con = sqlite3.connect(db_path, timeout=100)
-cur = con.cursor()
-cur.execute('SELECT * FROM {}'.format(table_nm))
-ff = cur.fetchall()
-cur.close()
-con.close()

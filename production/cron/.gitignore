@@ -1,4 +1,8 @@
+backup/
+misc/
+venv/
+log/
+
 *test*
 config.json
-log/
 *pid*.log
