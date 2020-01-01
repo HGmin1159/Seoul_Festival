@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import sqlite3, requests
+import sqlite3, requests, json
 from collections import OrderedDict
 
 # last_id = int(input())
@@ -12,7 +12,8 @@ KEYS = ['id', 'place_name', 'category_name', 'category_group_code',
 
 url = "https://dapi.kakao.com/v2/local/search/category.json"
 
-apikey = ""
+with open("config.json") as f:
+    apikey = json.load(f)["APIKEY"]
 
 db_path = "SEOUL_FESTIVAL.db"
 

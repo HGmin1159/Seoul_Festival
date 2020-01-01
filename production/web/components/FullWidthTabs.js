@@ -146,7 +146,11 @@ export default function FullWidthTabs({ fe, res, fes }) {
                 >
                     <TabPanel value={value} index={0} dir={theme.direction} >
                         <div className="gridContainer1">
-                            <img className="info-img" src={`/img/${fe.id}.jpg`}></img>
+                            <picture>
+                                <source type="image/webp" srcSet={require(`../public/img/${fe.id}.jpg?webp`)} />
+                                <img src={require(`../public/img/${fe.id}.jpg`)} className="info-img" />
+                            </picture>
+                            {/* <img src={`/img/${fe.id}.jpg`} className="info-img" /> */}
                             <div className="info">
                                 <p className="info-text info-title">{fe.name}</p>
                                 <p className="info-text text1">개최지역: {fe.region}</p>

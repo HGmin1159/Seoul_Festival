@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# https://github.com/HGmin1159/Seoul_Festival
 # To add a new cell, type '# %%'
 # To add a new markdown cell, type '# %% [markdown]'
 # %%
@@ -171,7 +172,9 @@ festival_new['축제장소_수정'] = np.where(festival_new['축제장소'].str.
 
 # %%
 url = "https://dapi.kakao.com/v2/local/search/keyword.json"
-apikey = "" 
+
+with open("config.json") as f:
+    apikey = json.load(f)["APIKEY"]
 
 result = list()
 no_info_festival = list()
@@ -458,5 +461,6 @@ con.close()
 
 
 # %%
+
 
 

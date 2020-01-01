@@ -39,14 +39,12 @@ out/
 clt_labels.csv
 csvtojson.py
 sqltojson.py
-next.config.js
 output.csv
 push_img_name.py
 test.html
 SimpleList.js
 .vscode
 
-2019 copy.json
-2019old.json
+backup/
 SEOUL_FESTIVAL.db
 memo.txt
