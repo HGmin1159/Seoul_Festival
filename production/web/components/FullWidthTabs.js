@@ -150,12 +150,15 @@ export default function FullWidthTabs({ fe, res, fes }) {
                                 <source type="image/webp" srcSet={require(`../public/img/${fe.id}.jpg?webp`)} />
                                 <img src={require(`../public/img/${fe.id}.jpg`)} className="info-img" />
                             </picture>
-                            {/* <img src={`/img/${fe.id}.jpg`} className="info-img" /> */}
                             <div className="info">
                                 <p className="info-text info-title">{fe.name}</p>
                                 <p className="info-text text1">개최지역: {fe.region}</p>
                                 <p className="info-text text2">축제장소: {fe.place}</p>
+                                {
+                                (fe.link.length !== 0)
+                                &&
                                 <p className="info-text link">누리집: <a href={fe.link}>{fe.link}</a></p>
+                                }
                                 <p className="info-text text3">{fe.exp}</p>
                             </div>
                             <div className="bar">
@@ -231,7 +234,6 @@ export default function FullWidthTabs({ fe, res, fes }) {
                 }
                 .scroll {
                     overflow: auto;
-                    height: 50vh;
                 }
                 .info-img {
                     ${isWide || !orientation? 'grid-row: 1/2; grid-column: 1/2;':''}
@@ -277,7 +279,7 @@ export default function FullWidthTabs({ fe, res, fes }) {
                     margin: 1vw;
                 }
                 .fest-list {
-                    max-width: 300px;
+                    max-width: 320px;
                     overflow-y: auto;
                     height: ${height-58}px;
                     ${isWide? '':'display: none;'}

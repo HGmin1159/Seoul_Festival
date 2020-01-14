@@ -30,6 +30,7 @@ const Info = ({ fe, res }) => {
           integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
           crossorigin=""></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+        <script src="https://cdn.osmbuildings.org/classic/0.2.2b/OSMBuildings-Leaflet.js"></script>
       </Head>
       <ThemeProvider theme={theme}>
         <FullWidthTabs fe={fe} res={res} fes={fes}></FullWidthTabs>
@@ -40,7 +41,11 @@ const Info = ({ fe, res }) => {
 }
 
 Info.getInitialProps = async function (context) {
-  const fe = queryString.parse(context.query.id);
+  const decodeInPlace = obj => {
+    Object.keys(obj).map(key => obj[key] = decodeURIComponent(obj[key]));
+  };
+  let fe = queryString.parse(context.query.id);
+  decodeInPlace(fe);
   let res;
   try {
     try {

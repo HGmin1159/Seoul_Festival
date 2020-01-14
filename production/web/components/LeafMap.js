@@ -23,7 +23,7 @@ const getLink = (festival) => {
     )
 }
 
-let map, markerLayer, marker, layer;
+let map, markerLayer, marker, layer, osmb;
 
 function isInside(marker, poly) {
     // console.log(poly[0])
@@ -157,7 +157,7 @@ const LeafMap = ({ fes, res, full, invalidate, preventSwipe, open, height}) => {
             onEachFeature: municipalHandler
         }).addTo(map);
         
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
     });
@@ -169,7 +169,7 @@ const LeafMap = ({ fes, res, full, invalidate, preventSwipe, open, height}) => {
                 map.remove();
                 restaurantMarkers = {};
             }
-            map = L.map('map').setView([fes.y, fes.x], 15);
+            map = L.map('map').setView([fes.y, fes.x], 16);
             marker = L.marker([fes.y, fes.x]).bindPopup(fes.name)
                 .addTo(map).openPopup();
             
@@ -188,11 +188,13 @@ const LeafMap = ({ fes, res, full, invalidate, preventSwipe, open, height}) => {
             //     id: 'mapbox.streets',
             //     accessToken: 'pk.eyJ1IjoiZG9sbGh5IiwiYSI6ImNrMnNraHRraDBpeGUzbXRqcm9hMTIxNnMifQ.s5z_Pkw604EFu087friCtQ'
             // }).addTo(map);
-            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
             layer = L.layerGroup().addTo(map);
+
+            osmb = new OSMBuildings(map).load('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json');
         }
     }, [fes, invalidate])
 

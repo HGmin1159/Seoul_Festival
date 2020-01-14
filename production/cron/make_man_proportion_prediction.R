@@ -1,0 +1,49 @@
+#!/usr/bin/Rscript
+# https://github.com/HGmin1159/Seoul_Festival
+library(readr)
+library(tidyverse)
+library(caret)
+library(randomForest)
+library(xgboost)
+
+data<-read_csv('fes_raio.csv')
+
+data<-as_tibble(data)
+
+data<-data %>%
+  mutate(MAN_SUM=MAN_10+MAN_20+MAN_30+MAN_40+MAN_50+MAN_60)
+
+var<-read_csv('data.csv')
+
+df<-var[-c(73,74,75),-1]
+
+df<-cbind(var[-c(73,74,75),-1],data$MAN_SUM)
+
+train_df<-df[-c(63:73),]
+test_df<-df[-c(1:62),]
+
+labels=data$MAN_SUM
+
+dtrain <- xgb.DMatrix(data = as.matrix(train_df[,-c(1,50)]), label=labels[c(1:62)])
+dtest <- xgb.DMatrix(data = as.matrix(test_df[,-c(1,50)]), label=labels[c(63:73)])
+
+watchlist <- list(train=dtrain, test=dtest)
+
+bst <- xgb.train(data=dtrain, max.depth=2, eta=1, nthread = 2, nrounds=2, watchlist=watchlist)
+
+# pred<-predict(bst,as.matrix(test_df[,-c(1,50)]))
+# plot(pred,labels[c(63:73)])
+
+# target<-read_csv('target_tag.csv')
+
+# df1<-as.matrix(target[,-1])
+
+# pred1 <-predict(bst, df1)
+
+# output<-cbind(target,pred1)
+
+# write.csv(output,file="output.csv",
+#   row.names=TRUE 
+#   )
+
+saveRDS(bst, "bst.rds")

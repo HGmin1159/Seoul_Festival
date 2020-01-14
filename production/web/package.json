@@ -7,7 +7,8 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest >> __tests__/logs/log.log 2>&1",
+    "test-debug": "cross-env HEADLESS=false jest"
   },
   "keywords": [],
   "author": "",
@@ -32,6 +33,10 @@
   },
   "devDependencies": {
     "cross-env": "^6.0.3",
-    "eslint-plugin-react-hooks": "^2.3.0"
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "expect-puppeteer": "^4.4.0",
+    "jest": "^24.9.0",
+    "jest-puppeteer": "^4.4.0",
+    "puppeteer": "^2.0.0"
   }
 }

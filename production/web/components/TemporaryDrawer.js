@@ -60,7 +60,7 @@ export default function TemporaryDrawer({ fes, isWide, height }) {
                 {`
                     .fest-list {
                         width: 67vmin;
-                        max-width: 300px;
+                        max-width: 320px;
                         min-width: 256px;
                         height: ${height - 48}px;
                     }

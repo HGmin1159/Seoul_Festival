@@ -25,7 +25,7 @@ from datetime import datetime, timedelta
 
 # %%
 start_date = '{}'.format(datetime.now().strftime("%Y%m%d"))
-end_date = '{}'.format((datetime.now()+ timedelta(days=30)).strftime("%Y%m%d"))
+end_date = '{}'.format((datetime.now()+ timedelta(days=365)).strftime("%Y%m%d"))
 
 
 # %%

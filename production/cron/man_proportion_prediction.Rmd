@@ -72,3 +72,7 @@ write.csv(output,file="output.csv",
   )
 ```
 
+```{r}
+saveRDS(bst, "bst.rds")
+```
+

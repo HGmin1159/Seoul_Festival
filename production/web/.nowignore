@@ -1,0 +1,5 @@
+manual-tests
+tests
+__tests__
+jest-puppeteer.config.js
+jest.config.js
