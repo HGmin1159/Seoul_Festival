@@ -1,0 +1,6 @@
+[submodule "production/web"]
+	path = production/web
+	url = https://github.com/HokyeongChoi/nothing.git
+[submodule "production/cron"]
+	path = production/cron
+	url = https://github.com/HokyeongChoi/sfcron.git
